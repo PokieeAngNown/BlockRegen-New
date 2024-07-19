@@ -19,7 +19,7 @@ public final class BlockRegenN extends JavaPlugin {
         [Function]
      */
     public static Plugin getPlugin(){
-        return Bukkit.getPluginManager().getPlugin("BlockRegen");
+        return Bukkit.getPluginManager().getPlugin("BlockRegenN");
     }
 
     public static @NotNull String getLanguage(String key) {
@@ -54,13 +54,13 @@ public final class BlockRegenN extends JavaPlugin {
         [Reg]
      */
     private void regCommands(){
-        Objects.requireNonNull(this.getCommand("blockregen")).setExecutor(this);
-        Objects.requireNonNull(this.getCommand("blockregen")).setExecutor(new BlockRegenCommand());
+        Objects.requireNonNull(this.getCommand("blockregenN")).setExecutor(this);
+        Objects.requireNonNull(this.getCommand("blockregenN")).setExecutor(new BlockRegenCommand());
     }
 
     private void regTabs(){
-        Objects.requireNonNull(this.getCommand("blockregen")).setTabCompleter(this);
-        Objects.requireNonNull(this.getCommand("blockregen")).setTabCompleter(new BlockRegenCommand());
+        Objects.requireNonNull(this.getCommand("blockregenN")).setTabCompleter(this);
+        Objects.requireNonNull(this.getCommand("blockregenN")).setTabCompleter(new BlockRegenCommand());
     }
 
     private void regListeners(){
