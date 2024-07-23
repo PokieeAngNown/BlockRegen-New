@@ -2,6 +2,7 @@ package cn.saltedfish.blockregenn;
 
 import cn.saltedfish.blockregenn.Commands.BlockRegenCommand;
 import cn.saltedfish.blockregenn.Listeners.PlayerEventsListener;
+import cn.saltedfish.blockregenn.Managers.AreaManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;

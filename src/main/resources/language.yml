@@ -32,3 +32,16 @@ Area:
         BlockAlreadyExist: "§f区域已经注册了方块 §b%BlockName"
         BlockNotFoundInServer: "§f服务器未注册方块 §b%BlockName"
         BlockNotFoundInArea: "§f区域未注册方块 §b%BlockName"
+Block:
+        Create: "§b%BlockName §f方块创建成功"
+        Remove: "§b%BlockName §删除成功"
+        AddMaterial: "§f已将 §a%MaterialName §f添加进 §b%BlockName §f方块"
+        RemoveMaterial: "§f已将 §a[%Index]%MaterialName  §f移出 §b%BlockName §f方块"
+        Info:
+                - "§b%BlockName §f方块信息如下"
+                - "§f>材料列表: §b%MaterialList"
+        List: "§f服务器有以下方块: §b%BlockList"
+        BlockAlreadyExist: "§f服务器已经注册了方块 §b%BlockName"
+        BlockNotFound: "§f服务器未注册方块 §b%BlockName"
+        IndexOutOfBound: "§f超出了方块 §b%BlockName 的材料列表"
+        MaterialNotFound: "§f未找到材料 §a%MaterialName"

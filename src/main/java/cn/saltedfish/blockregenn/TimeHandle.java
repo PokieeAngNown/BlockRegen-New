@@ -1,6 +1,7 @@
 package cn.saltedfish.blockregenn;
 
 import cn.saltedfish.blockregenn.Data.JsonFileManager;
+import cn.saltedfish.blockregenn.Managers.AreaManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;

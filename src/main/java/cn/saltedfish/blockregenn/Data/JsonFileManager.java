@@ -148,7 +148,7 @@ public class JsonFileManager {
 
         // 获取或创建 tag 节点
         JsonObject setting = main.has(tag) ? main.getAsJsonObject(tag) : new JsonObject();
-        setting.addProperty("Material", material.getTranslationKey().replace("block.", "").replace("minecraft.", "minecraft:"));
+        setting.addProperty("Material", material.name().toLowerCase());
         main.add(tag, setting);
 
         // 写回文件
@@ -188,7 +188,7 @@ public class JsonFileManager {
         JsonObject setting = main.has(tag) ? main.getAsJsonObject(tag) : new JsonObject();
         JsonArray jsonArray = new JsonArray();
         for (Material material : materialList) {
-            jsonArray.add(material.getTranslationKey().replace("block.", "").replace("minecraft.", "minecraft:"));
+            jsonArray.add(material.name().toLowerCase());
         }
         setting.add("MaterialList", jsonArray);
         main.add(tag, setting);

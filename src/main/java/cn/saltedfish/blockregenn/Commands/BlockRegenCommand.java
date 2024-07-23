@@ -1,10 +1,11 @@
 package cn.saltedfish.blockregenn.Commands;
 
-import cn.saltedfish.blockregenn.AreaManager;
-import cn.saltedfish.blockregenn.BlockManager;
+import cn.saltedfish.blockregenn.Managers.AreaManager;
+import cn.saltedfish.blockregenn.Managers.BlockManager;
 import cn.saltedfish.blockregenn.BlockRegenN;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,36 +15,181 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class BlockRegenCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
-
+        Player player;
         String message;
+        if  (!(commandSender instanceof Player)) {
+            return true;
+        }
+        player = (Player) commandSender;
+
+        if (args.length < 2){
+            message = BlockRegenN.getLanguage("InvalidCommand");
+            player.sendMessage(message);
+            return true;
+        }
+
         switch (args[0]){
             case "reload": {
                 Bukkit.getPluginManager().disablePlugin(BlockRegenN.getPlugin());
                 Bukkit.getPluginManager().enablePlugin(BlockRegenN.getPlugin());
-                if (commandSender instanceof Player) {
-                    Player player = (Player) commandSender;
-                    message = BlockRegenN.getLanguage("Reload");
-                    player.sendMessage(message);
-                }
+                message = BlockRegenN.getLanguage("Reload");
+                player.sendMessage(message);
+                break;
             }
-            break;
-            case "area": {
-                Player player;
-                if (!(commandSender instanceof Player)) {
-                    return true;
-                }
-                player = (Player) commandSender;
+            case "block": {
                 switch (args[1]) {
                     case "create": {
-                        //blockregen area createArea x1 y1 z1 x2 y2 z2 areaName
+                        //blockregen block create blockName
+                        if (args.length != 3){
+                            message = BlockRegenN.getLanguage("InvalidCommand");
+                            player.sendMessage(message);
+                            return true;
+                        }
+
+                        String blockName = args[2];
+
+                        if (BlockManager.getBlockList().contains(blockName)){
+                            message = BlockRegenN.getLanguage("Block.BlockAlreadyExist").replaceAll("%BlockName", blockName);
+                            player.sendMessage(message);
+                            return true;
+                        }
+
+                        BlockManager.createBlock(blockName);
+
+                        message = BlockRegenN.getLanguage("Block.Create");
+                        player.sendMessage(message);
+                        break;
+                    }
+                    case "remove": {
+                        //blockregen block remove blockName
+                        if (args.length != 3){
+                            message = BlockRegenN.getLanguage("InvalidCommand");
+                            player.sendMessage(message);
+                            return true;
+                        }
+
+                        String blockName = args[2];
+
+                        if (!BlockManager.getBlockList().contains(blockName)){
+                            message = BlockRegenN.getLanguage("Block.BlockNotFound").replaceAll("%BlockName", blockName);
+                            player.sendMessage(message);
+                            return true;
+                        }
+
+                        BlockManager.removeBlock(blockName);
+
+                        message = BlockRegenN.getLanguage("Block.Remove");
+                        player.sendMessage(message);
+                        break;
+                    }
+                    case "addMaterial": {
+                        //blockregen block addMaterial blockName materialName
+                        if (args.length != 4){
+                            message = BlockRegenN.getLanguage("InvalidCommand");
+                            player.sendMessage(message);
+                            return true;
+                        }
+
+                        String blockName = args[2];
+                        String materialName = args[3];
+
+                        if (!BlockManager.getBlockList().contains(blockName)){
+                            message = BlockRegenN.getLanguage("Block.BlockNotFound").replaceAll("%BlockName", blockName);
+                            player.sendMessage(message);
+                            return true;
+                        }
+
+                        Material material = Material.matchMaterial(materialName);
+                        if (material == null){
+                            message = BlockRegenN.getLanguage("Block.MaterialNotFound").replaceAll("%MaterialName", materialName);
+                            player.sendMessage(message);
+                            return true;
+                        }
+                        BlockManager.addMaterial(blockName, material);
+                        message = BlockRegenN.getLanguage("Block.AddMaterial").replaceAll("%MaterialName", materialName).replaceAll("%BlockName", blockName);
+                        player.sendMessage(message);
+                        break;
+                    }
+                    case "removeMaterial": {
+                        //blockregen block removeMaterial blockName index
+                        if (args.length != 4){
+                            message = BlockRegenN.getLanguage("InvalidCommand");
+                            player.sendMessage(message);
+                            return true;
+                        }
+
+                        String blockName = args[2];
+                        int index = Integer.parseInt(args[3]);
+
+                        if (!BlockManager.getBlockList().contains(blockName)){
+                            message = BlockRegenN.getLanguage("Block.BlockNotFound").replaceAll("%BlockName", blockName);
+                            player.sendMessage(message);
+                            return true;
+                        }
+
+                        if (index > BlockManager.getBlockMaterialList(blockName).size()){
+                            message = BlockRegenN.getLanguage("Block.IndexOutOfBound").replaceAll("%BlockName", blockName);
+                            player.sendMessage(message);
+                            return true;
+                        }
+
+                        Material material = BlockManager.getBlockMaterialList(blockName).get(index);
+                        String materialName = material.name();
+                        BlockManager.removeMaterial(blockName, index);
+
+                        message = BlockRegenN.getLanguage("Block.RemoveMaterial").replaceAll("%MaterialName", materialName).replaceAll("%BlockName", blockName).replaceAll("%Index", String.valueOf(index));
+                        player.sendMessage(message);
+                        break;
+                    }
+                    case "info": {
+                        //blockregen block info blockName
+                        if (args.length != 3){
+                            message = BlockRegenN.getLanguage("InvalidCommand");
+                            player.sendMessage(message);
+                            return true;
+                        }
+
+                        String blockName = args[2];
+
+                        if (!BlockManager.getBlockList().contains(blockName)){
+                            message = BlockRegenN.getLanguage("Block.BlockNotFound").replaceAll("%BlockName", blockName);
+                            player.sendMessage(message);
+                            return true;
+                        }
+
+                        message = BlockManager.getInfo(blockName).replaceAll("%BlockName", blockName);
+                        player.sendMessage(message);
+                        break;
+                    }
+                    case "list": {
+                        //blockregen block list
+                        if (args.length != 2){
+                            message = BlockRegenN.getLanguage("InvalidCommand");
+                            player.sendMessage(message);
+                            return true;
+                        }
+
+                        message = BlockManager.getList();
+                        player.sendMessage(message);
+                        break;
+                    }
+                    default: {
+                        message = BlockRegenN.getLanguage("InvalidCommand");
+                        player.sendMessage(message);
+                        break;
+                    }
+                }
+                break;
+            }
+            case "area": {
+                switch (args[1]) {
+                    case "create": {
+                        //blockregen area create x1 y1 z1 x2 y2 z2 areaName
                         if (args.length != 9) {
                             message = BlockRegenN.getLanguage("InvalidCommand");
                             player.sendMessage(message);
@@ -68,7 +214,7 @@ public class BlockRegenCommand implements CommandExecutor, TabCompleter {
                         Location loc1 = new Location(world, x1, y1, z1);
                         Location loc2 = new Location(world, x2, y2, z2);
 
-                        AreaManager.setArea(areaName, world, loc1, loc2);
+                        AreaManager.createArea(areaName, world, loc1, loc2);
 
                         message = BlockRegenN.getLanguage("Area.Create").replace("%AreaName", areaName);
                         player.sendMessage(message);
@@ -200,8 +346,7 @@ public class BlockRegenCommand implements CommandExecutor, TabCompleter {
                             return true;
                         }
 
-                        List<String> areaList = AreaManager.getRegenAreaList();
-                        message = BlockRegenN.getLanguage("Area.List").replaceAll("%AreaList", String.valueOf(areaList));
+                        message = AreaManager.getAreaList();
                         player.sendMessage(message);
                         break;
                     }
@@ -220,9 +365,54 @@ public class BlockRegenCommand implements CommandExecutor, TabCompleter {
     @Nullable
     @Override
     public List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
+        List<String> none = new ArrayList<>();
         if (args.length == 1){
-            return Arrays.asList("reload", "area");
+            return Arrays.asList("reload", "area", "block");
         }
+        if ("block".equals(args[0])){
+
+            if (args.length == 2){
+                return Arrays.asList("create","remove", "addMaterial", "removeMaterial", "info", "list");
+            }
+            if ("create".equals(args[1])){
+                //blockregen block create blockName
+                return none;
+            }
+            if ("remove".equals(args[1])){
+                //blockregen block remove blockName
+                if (args.length == 3){
+                    return BlockManager.getBlockList();
+                }
+            }
+            if ("addMaterial".equals(args[1])){
+                //blockregen block addMaterial blockName materialName
+                if (args.length == 3){
+                    return BlockManager.getBlockList();
+                }
+                if (args.length == 4){
+                    for (Material material : EnumSet.allOf(Material.class)) {
+                        none.add(material.name().toLowerCase());
+                    }
+                    return none;
+                }
+            }
+            if ("removeMaterial".equals(args[1])){
+                //blockregen block removeMaterial blockName index
+                if (args.length == 3){
+                    return BlockManager.getBlockList();
+                }
+                if (args.length == 4){
+                    return Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9");
+                }
+            }
+            if ("info".equals(args[1])){
+                //blockregen block info blockName
+                if (args.length == 3){
+                    return BlockManager.getBlockList();
+                }
+            }
+        }
+
         if ("area".equals(args[0])) {
 
             if (args.length == 2) {

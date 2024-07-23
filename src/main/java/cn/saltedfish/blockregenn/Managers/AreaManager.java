@@ -1,5 +1,6 @@
-package cn.saltedfish.blockregenn;
+package cn.saltedfish.blockregenn.Managers;
 
+import cn.saltedfish.blockregenn.BlockRegenN;
 import cn.saltedfish.blockregenn.Data.JsonFileManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -88,7 +89,14 @@ public class AreaManager {
                 .replaceAll("%BlockList", blockList);
     }
 
-    public static void setArea(String areaName,World world, Location loc1, Location loc2){
+    public static @NotNull String getAreaList(){
+        List<String> list = getRegenAreaList();
+        String areaList = String.valueOf(list);
+        return BlockRegenN.getLanguage("Area.List")
+                .replaceAll("%AreaList", areaList);
+    }
+
+    public static void createArea(String areaName, World world, Location loc1, Location loc2){
         try {
             File jsonFIle = new File(BlockRegenN.getPlugin().getDataFolder() + "/data/", areaName + ".json");
             if (!jsonFIle.exists()) {

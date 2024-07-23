@@ -1,6 +1,6 @@
 package cn.saltedfish.blockregenn.Listeners;
 
-import cn.saltedfish.blockregenn.AreaManager;
+import cn.saltedfish.blockregenn.Managers.AreaManager;
 import cn.saltedfish.blockregenn.Data.JsonFileManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
